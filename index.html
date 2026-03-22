@@ -70,6 +70,7 @@
         <div class="truncate">
           <span id="modalID" class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded"></span>
           <h2 id="modalTitle" class="text-lg md:text-2xl font-bold text-slate-800 mt-1 uppercase tracking-tight truncate"></h2>
+          <span id="pic" class="text-[10px] font-bold text-slate-500"></span>
         </div>
         <button onclick="closeModal()" class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 md:bg-transparent text-slate-400 hover:text-red-500 transition-colors text-2xl">&times;</button>
       </div>
@@ -305,7 +306,8 @@
 
     function openDetail(index) {
       const item = currentDisplayedData[index];
-      document.getElementById('modalID').innerText = `ID: ${item.headerInfo.ID}`;
+      document.getElementById('modalID').innerText = item.headerInfo.ID;
+      document.getElementById('pic').innerText = item.headerInfo.Nama;
       document.getElementById('modalTitle').innerText = item.headerInfo.Kegiatan;
       document.getElementById('detBrand').innerText = item.headerInfo.Brand;
       document.getElementById('detBudget').innerText = item.headerInfo.Kode_Budget;
