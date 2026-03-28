@@ -114,6 +114,7 @@
                   <th class="p-3 md:p-4 text-left font-bold text-slate-500 text-[10px] md:text-xs">PRODUK</th>
                   <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs">QTY</th>
                   <th class="p-3 md:p-4 text-right font-bold text-indigo-600 text-[10px] md:text-xs">TOTAL</th>
+                  <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs">DO</th>
                   <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs uppercase">Status</th>
                 </tr>
               </thead>
@@ -126,7 +127,7 @@
   </div>
 
   <script>
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbzhRb1LOtsVialUOZANUqlgC174DUyZVOnPv4edxfVAPJrEBpQfY4_SnSCptXpTDWmVrg/exec"; 
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbyVqh8YyRGty1U7wjbOvt--G9GENBqb1EunUMqpQRSmakgqo-aTxq6-tsePxBqbkijy5A/exec"; 
     let globalData = [];
     let currentDisplayedData = [];
 
@@ -145,8 +146,10 @@
     async function fetchData() {
       try {
         const response = await fetch(webAppUrl);
-        const data = await response.json();
-        globalData = data;
+        const result = await response.json();
+        
+        const data = result.rekapData;
+        globalData = data; 
         currentDisplayedData = data;
         populateDropdowns(data);
         renderLayer1(data);
@@ -268,7 +271,7 @@
                     <div class="text-[10px] text-slate-400 uppercase font-bold">${item.headerInfo.Brand}</div>
                   </td>
                   <td class="px-6 py-4 text-center text-xs font-mono font-bold text-slate-500">${item.headerInfo.Tanggal}</td>
-                  <td class="px-6 py-4 text-center text-sm font-medium text-slate-400">${item.headerInfo.NO_DO || '-'}</td>
+                  <td class="px-6 py-4 text-center text-xs font-mono text-slate-400">${item.details[0].NO_DO || item.details[0]["NO DO"] || "-"}</td>
                   <td class="px-6 py-4 text-center">
                     <div class="flex flex-wrap justify-center gap-1">${[...new Set(item.details.map(d => d.Status))].map(stat => getStatusBadge(stat)).join('')}</div>
                   </td>
@@ -319,12 +322,14 @@
 
       let total = 0;
       document.getElementById('modalTableBody').innerHTML = item.details.map(d => {
+      console.log(d);
         total += (Number(d.Total) || 0);
         return `
           <tr class="border-b border-slate-50">
             <td class="p-3 md:p-4 font-bold text-slate-700">${d.Produk}<br><span class="text-[9px] font-mono font-normal text-slate-400">${d.Kode}</span></td>
             <td class="p-3 md:p-4 text-center font-medium">${d.Jumlah}</td>
             <td class="p-3 md:p-4 text-right font-bold text-indigo-600">${formatIDR(d.Total)}</td>
+            <td class="p-3 md:p-4 font-mono text-xs text-center">${d.NO_DO || '-'}</td>
             <td class="p-3 md:p-4 text-center">${getStatusBadge(d.Status)}</td>
           </tr>`;
       }).join('');
