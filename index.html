@@ -22,330 +22,111 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen font-sans">
 
-  <div class="max-w-7xl mx-auto p-4 md:p-8">
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 text-center md:text-left">
-      <div>
-        <h1 class="text-2xl md:text-3xl font-extrabold text-indigo-900 tracking-tight">Monitoring <span class="text-indigo-500">NJ</span></h1>
-      </div>
-      <div id="statusIndicator" class="flex items-center justify-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 self-center md:self-auto">
-        <div id="dot" class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-        <span id="statusText" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Connecting...</span>
-      </div>
+<div class="max-w-7xl mx-auto p-4 md:p-8">
+  <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 text-center md:text-left">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-indigo-900 tracking-tight">Monitoring <span class="text-indigo-500">NJ</span></h1>
     </div>
-
-    <div class="mb-6 space-y-4">
-      <div class="relative group">
-        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg class="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-        </div>
-        <input type="text" id="omniSearch" onkeyup="applyFilters()" 
-          class="block w-full pl-11 pr-4 py-3 md:py-4 bg-white border border-slate-200 rounded-xl md:rounded-2xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all outline-none text-sm md:text-base font-medium text-slate-600" 
-          placeholder="Cari Nama, Kegiatan, atau NO DO...">
-      </div>
-
-      <div class="flex flex-wrap gap-2 items-center">
-        <select id="filterBrand" onchange="applyFilters()" class="flex-1 md:flex-none bg-white border border-slate-200 text-slate-600 text-[11px] font-bold rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer uppercase shadow-sm">
-          <option value="">Semua Brand</option>
-        </select>
-        <select id="filterStatus" onchange="applyFilters()" class="flex-1 md:flex-none bg-white border border-slate-200 text-slate-600 text-[11px] font-bold rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer uppercase shadow-sm">
-          <option value="">Semua Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Pengajuan">Pengajuan</option>
-          <option value="Done">Done</option>
-          <option value="Kendala">Kendala</option>
-        </select>
-        <button onclick="resetFilters()" class="w-full md:w-auto text-xs font-bold text-indigo-500 hover:text-indigo-700 transition-colors px-2 py-2">Clear All</button>
-      </div>
-    </div>
-
-    <div id="mainContainer">
-        </div>
-  </div>
-
-  <div id="modalDetail" onclick="handleOutsideClick(event)" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div id="modalContent" class="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden">
-      <div class="p-5 md:p-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20">
-        <div class="truncate">
-          <span id="modalID" class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded"></span>
-          <h2 id="modalTitle" class="text-lg md:text-2xl font-bold text-slate-800 mt-1 uppercase tracking-tight truncate"></h2>
-          <span id="pic" class="text-[10px] font-bold text-slate-500"></span>
-        </div>
-        <button onclick="closeModal()" class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 md:bg-transparent text-slate-400 hover:text-red-500 transition-colors text-2xl">&times;</button>
-      </div>
-      
-      <div class="overflow-y-auto p-5 md:p-6 space-y-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <div class="p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Brand</p>
-            <p id="detBrand" class="text-xs md:text-sm font-bold text-slate-700"></p>
-          </div>
-          <div class="p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kode Budget</p>
-            <p id="detBudget" class="text-xs md:text-sm font-bold text-slate-700"></p>
-          </div>
-          <div class="p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Tanggal</p>
-            <p id="detDate" class="text-xs md:text-sm font-bold text-slate-700"></p>
-          </div>
-          <div class="p-3 md:p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-            <p class="text-[9px] md:text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Total Budget</p>
-            <p id="detGrandTotal" class="text-sm md:text-lg font-bold text-indigo-700"></p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-4">
-            <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Background</h4><p id="detBackground" class="text-xs md:text-sm text-slate-600 bg-white border border-slate-100 p-3 rounded-lg"></p></div>
-            <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Objective</h4><p id="detObjective" class="text-xs md:text-sm text-indigo-600 italic bg-indigo-50/30 border border-indigo-100 p-3 rounded-lg"></p></div>
-          </div>
-          <div class="space-y-4">
-            <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Mekanisme</h4><p id="detMekanisme" class="text-xs md:text-sm text-slate-600 bg-white border border-slate-100 p-3 rounded-lg"></p></div>
-            <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Keterangan</h4><p id="detKeterangan" class="text-xs md:text-sm text-slate-500 bg-white border border-slate-100 p-3 rounded-lg"></p></div>
-          </div>
-        </div>
-
-        <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead class="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th class="p-3 md:p-4 text-left font-bold text-slate-500 text-[10px] md:text-xs">PRODUK</th>
-                  <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs">QTY</th>
-                  <th class="p-3 md:p-4 text-right font-bold text-indigo-600 text-[10px] md:text-xs">TOTAL</th>
-                  <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs">DO</th>
-                  <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs uppercase">Status</th>
-                </tr>
-              </thead>
-              <tbody id="modalTableBody" class="divide-y divide-slate-100 text-[11px] md:text-sm"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div id="statusIndicator" class="flex items-center justify-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 self-center md:self-auto">
+      <div id="dot" class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+      <span id="statusText" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Connecting...</span>
     </div>
   </div>
 
-  <script>
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbyVqh8YyRGty1U7wjbOvt--G9GENBqb1EunUMqpQRSmakgqo-aTxq6-tsePxBqbkijy5A/exec"; 
-    let globalData = [];
-    let currentDisplayedData = [];
+  <div class="mb-6 space-y-4">
+    <div class="relative group">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <input type="text" id="omniSearch" onkeyup="applyFilters()" 
+        class="block w-full pl-11 pr-4 py-3 md:py-4 bg-white border border-slate-200 rounded-xl md:rounded-2xl shadow-sm focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all outline-none text-sm md:text-base font-medium text-slate-600" 
+        placeholder="Cari Nama, Kegiatan, atau NO DO...">
+    </div>
 
-    window.onload = () => {
-      renderSkeleton();
-      fetchData();
-    };
+    <div class="flex flex-wrap gap-2 items-center">
+      <select id="filterBrand" onchange="applyFilters()" class="flex-1 md:flex-none bg-white border border-slate-200 text-slate-600 text-[11px] font-bold rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer uppercase shadow-sm">
+        <option value="">Semua Brand</option>
+      </select>
+      <select id="filterStatus" onchange="applyFilters()" class="flex-1 md:flex-none bg-white border border-slate-200 text-slate-600 text-[11px] font-bold rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer uppercase shadow-sm">
+        <option value="">Semua Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Pengajuan">Pengajuan</option>
+        <option value="Done">Done</option>
+        <option value="Kendala">Kendala</option>
+      </select>
+      <button onclick="resetFilters()" class="w-full md:w-auto text-xs font-bold text-indigo-500 hover:text-indigo-700 transition-colors px-2 py-2">Clear All</button>
+    </div>
+  </div>
 
-    document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeModal(); });
+  <div id="mainContainer">
+      </div>
+</div>
 
-    function handleOutsideClick(e) {
-      const modalContent = document.getElementById('modalContent');
-      if (modalContent && !modalContent.contains(e.target)) closeModal();
-    }
+<div id="modalDetail" onclick="handleOutsideClick(event)" class="fixed inset-0 z-50 hidden flex items-end md:items-center justify-center p-0 md:p-4 bg-slate-900/60 backdrop-blur-sm">
+  <div id="modalContent" class="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden">
+    <div class="p-5 md:p-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20">
+      <div class="truncate">
+        <span id="modalID" class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded"></span>
+        <h2 id="modalTitle" class="text-lg md:text-2xl font-bold text-slate-800 mt-1 uppercase tracking-tight truncate"></h2>
+        <span id="pic" class="text-[10px] font-bold text-slate-500"></span>
+      </div>
+      <button onclick="closeModal()" class="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 md:bg-transparent text-slate-400 hover:text-red-500 transition-colors text-2xl">&times;</button>
+    </div>
+    
+    <div class="overflow-y-auto p-5 md:p-6 space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div class="p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-100">
+          <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Brand</p>
+          <p id="detBrand" class="text-xs md:text-sm font-bold text-slate-700"></p>
+        </div>
+        <div class="p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-100">
+          <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kode Budget</p>
+          <p id="detBudget" class="text-xs md:text-sm font-bold text-slate-700"></p>
+        </div>
+        <div class="p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-100">
+          <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Tanggal</p>
+          <p id="detDate" class="text-xs md:text-sm font-bold text-slate-700"></p>
+        </div>
+        <div class="p-3 md:p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+          <p class="text-[9px] md:text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Total Budget</p>
+          <p id="detGrandTotal" class="text-sm md:text-lg font-bold text-indigo-700"></p>
+        </div>
+      </div>
 
-    async function fetchData() {
-      try {
-        const response = await fetch(webAppUrl);
-        const result = await response.json();
-        
-        const data = result.rekapData;
-        globalData = data; 
-        currentDisplayedData = data;
-        populateDropdowns(data);
-        renderLayer1(data);
-        document.getElementById('dot').classList.replace('bg-yellow-500', 'bg-green-500');
-        document.getElementById('statusText').innerText = "System Online";
-      } catch (error) {
-        console.error(error);
-        document.getElementById('statusText').innerText = "Offline";
-        document.getElementById('dot').classList.replace('bg-yellow-500', 'bg-red-500');
-        document.getElementById('mainContainer').innerHTML = `
-          <div class="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-12 text-center">
-            <div class="text-4xl mb-4">⚠️</div>
-            <h3 class="text-lg font-bold text-slate-800">Gagal Memuat Data</h3>
-            <p class="text-slate-500 text-sm mt-1">Cek koneksi internet atau URL API lo.</p>
-            <button onclick="location.reload()" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-full font-bold text-xs uppercase">Coba Lagi</button>
-          </div>
-        `;
-      }
-    }
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Background</h4><p id="detBackground" class="text-xs md:text-sm text-slate-600 bg-white border border-slate-100 p-3 rounded-lg"></p></div>
+          <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Objective</h4><p id="detObjective" class="text-xs md:text-sm text-indigo-600 italic bg-indigo-50/30 border border-indigo-100 p-3 rounded-lg"></p></div>
+        </div>
+        <div class="space-y-4">
+          <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Mekanisme</h4><p id="detMekanisme" class="text-xs md:text-sm text-slate-600 bg-white border border-slate-100 p-3 rounded-lg"></p></div>
+          <div><h4 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Keterangan</h4><p id="detKeterangan" class="text-xs md:text-sm text-slate-500 bg-white border border-slate-100 p-3 rounded-lg"></p></div>
+        </div>
+      </div>
 
-    function renderSkeleton() {
-      const container = document.getElementById('mainContainer');
-      const skeletonRow = `<div class="h-16 w-full skeleton mb-1 rounded"></div>`;
-      const skeletonCard = `<div class="h-32 w-full skeleton mb-4 rounded-2xl"></div>`;
-      
-      container.innerHTML = `
-        <div class="hidden md:block bg-white rounded-2xl p-4 border border-slate-200">${Array(8).fill(skeletonRow).join('')}</div>
-        <div class="md:hidden">${Array(5).fill(skeletonCard).join('')}</div>
-      `;
-    }
-
-    function populateDropdowns(data) {
-      const brandSelect = document.getElementById('filterBrand');
-      const brands = [...new Set(data.map(item => item.headerInfo.Brand))].filter(Boolean).sort();
-      brands.forEach(brand => {
-        const opt = document.createElement('option');
-        opt.value = brand; opt.innerText = brand;
-        brandSelect.appendChild(opt);
-      });
-    }
-
-    function applyFilters() {
-      const searchTerm = document.getElementById('omniSearch').value.toLowerCase();
-      const brandFilter = document.getElementById('filterBrand').value;
-      const statusFilter = document.getElementById('filterStatus').value;
-
-      currentDisplayedData = globalData.filter(item => {
-        const h = item.headerInfo;
-        const d = item.details;
-        const matchesSearch = (
-          h.Nama.toLowerCase().includes(searchTerm) || 
-          h.Kegiatan.toLowerCase().includes(searchTerm) ||
-          h.ID.toString().includes(searchTerm) ||
-          (h.NO_DO && h.NO_DO.toLowerCase().includes(searchTerm))
-        );
-        const matchesBrand = brandFilter === "" || h.Brand === brandFilter;
-        const matchesStatus = statusFilter === "" || d.some(detail => detail.Status === statusFilter);
-        return matchesSearch && matchesBrand && matchesStatus;
-      });
-      renderLayer1(currentDisplayedData);
-    }
-
-    function resetFilters() {
-      document.getElementById('omniSearch').value = "";
-      document.getElementById('filterBrand').value = "";
-      document.getElementById('filterStatus').value = "";
-      currentDisplayedData = globalData;
-      renderLayer1(globalData);
-    }
-
-    function getStatusBadge(status) {
-      const s = status ? status.toLowerCase() : '';
-      let colorClass = "";
-      switch(s) {
-        case 'pending': colorClass = "bg-slate-100 text-slate-600 ring-slate-600/20"; break;
-        case 'pengajuan': colorClass = "bg-blue-50 text-blue-700 ring-blue-600/20"; break;
-        case 'done': colorClass = "bg-green-50 text-green-700 ring-green-600/20"; break;
-        case 'kendala': colorClass = "bg-red-50 text-red-700 ring-red-600/20 animate-pulse"; break;
-        default: colorClass = "bg-gray-50 text-gray-400 ring-gray-600/10";
-      }
-      return `<span class="inline-block px-2 py-0.5 text-[9px] font-black rounded-full ring-1 ring-inset uppercase ${colorClass}">${status || 'Unknown'}</span>`;
-    }
-
-    function renderLayer1(data) {
-      const container = document.getElementById('mainContainer');
-      if (data.length === 0) {
-        container.innerHTML = `
-          <div class="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-12 text-center">
-            <div class="text-4xl mb-4">🔍</div>
-            <h3 class="text-lg font-bold text-slate-800">Data Tidak Ditemukan</h3>
-            <button onclick="resetFilters()" class="mt-2 text-indigo-500 font-bold text-xs underline uppercase">Reset Filter</button>
-          </div>
-        `;
-        return;
-      }
-
-      let desktopHTML = `
-        <div class="hidden md:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-50 border-b border-slate-200">
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">ID & Nama</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Kegiatan</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-center">Tanggal</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-center">NO DO</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-center">Status</th>
-                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Action</th>
+      <div class="border border-slate-100 rounded-xl overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="p-3 md:p-4 text-left font-bold text-slate-500 text-[10px] md:text-xs">PRODUK</th>
+                <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs">QTY</th>
+                <th class="p-3 md:p-4 text-right font-bold text-indigo-600 text-[10px] md:text-xs">TOTAL</th>
+                <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs">DO</th>
+                <th class="p-3 md:p-4 text-center font-bold text-slate-500 text-[10px] md:text-xs uppercase">Status</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-slate-100">
-              ${data.map((item, index) => `
-                <tr onclick="openDetail(${index})" class="hover:bg-indigo-50/40 transition-all cursor-pointer group">
-                  <td class="px-6 py-4 text-xs">
-                    <div class="font-black text-indigo-400">#${item.headerInfo.ID}</div>
-                    <div class="font-bold text-slate-700">${item.headerInfo.Nama}</div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="text-sm font-semibold text-slate-600">${item.headerInfo.Kegiatan}</div>
-                    <div class="text-[10px] text-slate-400 uppercase font-bold">${item.headerInfo.Brand}</div>
-                  </td>
-                  <td class="px-6 py-4 text-center text-xs font-mono font-bold text-slate-500">${item.headerInfo.Tanggal}</td>
-                  <td class="px-6 py-4 text-center text-xs font-mono text-slate-400">${item.details[0].NO_DO || item.details[0]["NO DO"] || "-"}</td>
-                  <td class="px-6 py-4 text-center">
-                    <div class="flex flex-wrap justify-center gap-1">${[...new Set(item.details.map(d => d.Status))].map(stat => getStatusBadge(stat)).join('')}</div>
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <button class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-sm">Detail</button>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
+            <tbody id="modalTableBody" class="divide-y divide-slate-100 text-[11px] md:text-sm"></tbody>
           </table>
         </div>
-      `;
+      </div>
+    </div>
+  </div>
+</div>
 
-      let mobileHTML = `
-        <div class="md:hidden space-y-4">
-          ${data.map((item, index) => `
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="openDetail(${index})">
-              <div class="flex justify-between items-start mb-2">
-                <span class="text-[10px] font-black text-indigo-400 uppercase">#${item.headerInfo.ID}</span>
-                <span class="text-[10px] font-bold text-slate-400 font-mono">${item.headerInfo.Tanggal}</span>
-              </div>
-              <h3 class="font-bold text-slate-800 text-sm mb-1">${item.headerInfo.Nama}</h3>
-              <p class="text-xs text-slate-500 font-medium line-clamp-1 mb-3">${item.headerInfo.Kegiatan}</p>
-              <div class="flex justify-between items-center pt-3 border-t border-slate-50">
-                <div class="flex flex-wrap gap-1">${[...new Set(item.details.map(d => d.Status))].map(stat => getStatusBadge(stat)).join('')}</div>
-                <div class="text-indigo-500 font-bold text-[10px] uppercase">Detail &rsaquo;</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+ <script src="script.js" defer></script>
 
-      container.innerHTML = desktopHTML + mobileHTML;
-    }
-
-    function openDetail(index) {
-      const item = currentDisplayedData[index];
-      document.getElementById('modalID').innerText = item.headerInfo.ID;
-      document.getElementById('pic').innerText = item.headerInfo.Nama;
-      document.getElementById('modalTitle').innerText = item.headerInfo.Kegiatan;
-      document.getElementById('detBrand').innerText = item.headerInfo.Brand;
-      document.getElementById('detBudget').innerText = item.headerInfo.Kode_Budget;
-      document.getElementById('detDate').innerText = item.headerInfo.Tanggal;
-      document.getElementById('detBackground').innerText = item.headerInfo.Background || '-';
-      document.getElementById('detObjective').innerText = item.headerInfo.Objective || '-';
-      document.getElementById('detMekanisme').innerText = item.headerInfo.Mekanisme || '-';
-      document.getElementById('detKeterangan').innerText = item.headerInfo.Keterangan || '-';
-
-      let total = 0;
-      document.getElementById('modalTableBody').innerHTML = item.details.map(d => {
-      console.log(d);
-        total += (Number(d.Total) || 0);
-        return `
-          <tr class="border-b border-slate-50">
-            <td class="p-3 md:p-4 font-bold text-slate-700">${d.Produk}<br><span class="text-[9px] font-mono font-normal text-slate-400">${d.Kode}</span></td>
-            <td class="p-3 md:p-4 text-center font-medium">${d.Jumlah}</td>
-            <td class="p-3 md:p-4 text-right font-bold text-indigo-600">${formatIDR(d.Total)}</td>
-            <td class="p-3 md:p-4 font-mono text-xs text-center">${d.NO_DO || '-'}</td>
-            <td class="p-3 md:p-4 text-center">${getStatusBadge(d.Status)}</td>
-          </tr>`;
-      }).join('');
-      document.getElementById('detGrandTotal').innerText = formatIDR(total);
-      document.getElementById('modalDetail').classList.remove('hidden');
-      document.body.classList.add('modal-active');
-    }
-
-    function closeModal() {
-      document.getElementById('modalDetail').classList.add('hidden');
-      document.body.classList.remove('modal-active');
-    }
-
-    function formatIDR(num) {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
-    }
-  </script>
 </body>
 </html>
