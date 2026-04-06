@@ -193,7 +193,6 @@ const webAppUrl = "/api";
 
       let total = 0;
       document.getElementById('modalTableBody').innerHTML = item.details.map(d => {
-      console.log(d);
         total += (Number(d.Total) || 0);
         return `
           <tr class="border-b border-slate-50">
